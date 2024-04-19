@@ -1,4 +1,8 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import { createApp } from "vue";
+import App from "./App.vue";
+import mitt from "mitt";
+import "./assets/css/trulo.css";
 
-createApp(App).mount('#app')
+window.eventBus = mitt();
+
+createApp(App).mount("#app");
