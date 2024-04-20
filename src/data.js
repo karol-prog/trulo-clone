@@ -50,7 +50,7 @@ export const data = [
         labels: ["green"],
         tags: ["very", "good", "boy"],
         image: {
-          filename: "hachiboy.png",
+          filename: "hachiko.jpg",
           alt: "drawing of a dog, akita breed",
         },
       },
