@@ -7,7 +7,7 @@
       tag="div"
       class="sm:flex items-start w-screen px-4 py-10 overflow-x-auto"
     >
-      <!-- overlay -->
+      <!-- black overlay after clicking on card -->
       <div
         v-if="overlay"
         class="bg-black bg-opacity-70 fixed top-0 left-0 w-full h-screen z-10"
@@ -22,10 +22,11 @@
         :title="list.title"
         :cards="list.cards"
         @card-coming="addNewCard"
-        @new-list-title="editListTitle($event, list)"
+        @new-list-title="editListTitle($event)"
         @overlay-coming="openOverlay($event)"
         @close-overlay-coming="closeOverlay($event)"
         @remove-card-coming-to-parent="removeCardComing($event)"
+        @new-text-coming-to-parent="editTextTitle($event)"
       />
 
       <NewListForm @new-list-coming="addNewList($event)" :key="0" />
@@ -105,11 +106,35 @@ export default {
 
     //remove the selected card from the list with selected id
     removeCardComing(removeCard) {
+      //find the right list with selected card
       let listToRemoveCardFromIt = this.data.find(
         (list) => list.id === removeCard.listsId
       );
+      //in that list in cards array filter out the id of each card with remove card
+      let currentListCardRemove = listToRemoveCardFromIt.cards.filter(
+        (card) => card.id !== removeCard.cardId
+      );
+      //update the cards array with new array of cards
+      listToRemoveCardFromIt.cards = currentListCardRemove;
 
-      console.log(listToRemoveCardFromIt);
+      //close overlay
+      this.closeOverlay();
+    },
+
+    //for editing the text in card
+    editTextTitle(newText) {
+      //find the current list
+      let currentList = this.data.find((list) => list.id === newText.listId);
+
+      let currentListCard = currentList.cards.find(
+        (card) => card.id === newText.cardId
+      );
+
+      //update the text in find card
+      currentListCard.text = newText.newText;
+
+      //close overlay
+      this.closeOverlay();
     },
   },
 };

@@ -23,6 +23,7 @@
         @toggle-overlay="overlayToParent($event)"
         @close-overlay="closeOverlayToParent($event)"
         @remove-card-coming="removeCardComing($event)"
+        @new-card-text-coming="sendTextToParent($event)"
       />
     </transition-group>
 
@@ -42,6 +43,7 @@ export default {
     "overlay-coming",
     "close-overlay-coming",
     "remove-card-coming-to-parent",
+    "new-text-coming-to-parent",
   ],
 
   components: {
@@ -101,6 +103,10 @@ export default {
 
     removeCardComing(removeCard) {
       this.$emit("remove-card-coming-to-parent", removeCard);
+    },
+
+    sendTextToParent(newText) {
+      this.$emit("new-text-coming-to-parent", newText);
     },
   },
 };

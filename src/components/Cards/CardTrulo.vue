@@ -9,7 +9,15 @@
     <div class="p-3">
       <CardLabel :labels="card.labels" />
 
-      <p>{{ card.text }}</p>
+      <p
+        @keydown.enter="saveNewText"
+        :contenteditable="isEditing"
+        :class="{ 'shadow-outline': isEditing }"
+        class="outline-none"
+        ref="textElement"
+      >
+        {{ card.text }}
+      </p>
 
       <CardTags :tags="card.tags" />
 
@@ -20,6 +28,7 @@
           :listId="listId"
           @close-popup="closePopup"
           @remove-card="removeCard($event)"
+          @start-edit="startEdit"
         />
       </transition>
     </div>
@@ -33,7 +42,12 @@ import CardTags from "./CardTags.vue";
 import CardPopup from "./CardPopup.vue";
 
 export default {
-  emits: ["toggle-overlay", "close-overlay", "remove-card-coming"],
+  emits: [
+    "toggle-overlay",
+    "close-overlay",
+    "remove-card-coming",
+    "new-card-text-coming",
+  ],
 
   components: {
     CardTags,
@@ -54,6 +68,7 @@ export default {
   data() {
     return {
       isPopup: false,
+      isEditing: false,
     };
   },
 
@@ -70,6 +85,25 @@ export default {
 
     removeCard(cardToRemove) {
       this.$emit("remove-card-coming", cardToRemove);
+    },
+
+    //edit card text
+    startEdit() {
+      this.isEditing = true;
+      setTimeout(() => {
+        this.$refs.textElement.focus();
+      }, 0);
+    },
+
+    //save new text to object and send it to parent
+    saveNewText() {
+      this.isEditing = false;
+      //send it to parent
+      this.$emit("new-card-text-coming", {
+        cardId: this.card.id,
+        listId: this.listId,
+        newText: this.$refs.textElement.textContent,
+      });
     },
   },
 };
